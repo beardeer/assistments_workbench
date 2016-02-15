@@ -2,7 +2,7 @@
 import csv
 from tqdm import tqdm
 
-from ASSISTmentsDataWorkbench.data_reader import problem_difficulty
+from assistments_workbench.data_reader import problem_difficulty
 from utility_dot_py.utility import DataCache
 
 
@@ -28,7 +28,7 @@ def generate_PFA_data(input_file_path, output_file_path, col_mapping = {}, pfa_m
 	csv_data = []
 
 	# for tqdm to work
-	for row in csv_reader:
+	for row in tqdm(csv_reader):
 		csv_data.append(row)
 
 	for row in tqdm(csv_data):
