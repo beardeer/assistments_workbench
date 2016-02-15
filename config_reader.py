@@ -9,4 +9,4 @@ import ConfigParser
 
 config = ConfigParser.ConfigParser()
 
-config.read('config.ini')
+config.read('C:/Workarea/GitHub/ASSISTmentsDataWorkbench/config.ini')
