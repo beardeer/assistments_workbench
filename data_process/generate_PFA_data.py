@@ -15,7 +15,6 @@ def generate_PFA_data(input_file_path, output_file_path, col_mapping = {}, pfa_m
 	csv_writer = csv.writer(output_file)
 
 	header = csv_reader.next()
-	print header
 
 	data_cache = DataCache(problem_difficulty)
 
@@ -25,18 +24,28 @@ def generate_PFA_data(input_file_path, output_file_path, col_mapping = {}, pfa_m
 	correct_col = col_mapping['correct']
 
 	user_seq_dict = {}
-
+	seq_list = []
 	csv_data = []
 
 	# for tqdm to work
 	for row in tqdm(csv_reader):
+		seq = row[seq_col]
+		seq_list.append(seq)
 		csv_data.append(row)
+
+	seq_list = list(set(seq_list))
+	seq_len = len(seq_list)
+	seq_list.sort()
+	seq_list = seq_list + seq_list
 
 	for row in tqdm(csv_data):
 		user = row[user_col]
 		seq = row[seq_col]
 		problem = row[problem_col]
 		correct = ceil(float(row[correct_col]))
+		
+		correct_num_list = [0] * len(seq_list)
+		seq_pos = seq_list.index(seq)
 
 		if user_seq_dict.has_key(user) == False:
 			user_seq_dict[user] = {}
@@ -48,7 +57,12 @@ def generate_PFA_data(input_file_path, output_file_path, col_mapping = {}, pfa_m
 
 		difficulty = data_cache.get(problem)
 
-		csv_writer.writerow([user, seq, this_user_seq['correct_num'], this_user_seq['incorrect_num'], difficulty, correct])
+		correct_num_list[seq_pos] = this_user_seq['correct_num']
+		correct_num_list[seq_len + seq_pos] = this_user_seq['incorrect_num']
+
+		output_data = [seq] + correct_num_list + [difficulty, correct]
+
+		csv_writer.writerow(output_data)
 
 		if correct == 1.0:
 			this_user_seq['correct_num'] += 1
@@ -59,8 +73,10 @@ def generate_PFA_data(input_file_path, output_file_path, col_mapping = {}, pfa_m
 	input_file.close()
 	output_file.close()
 
+	print len(output_data)
+
 
 if __name__ == "__main__":
-	col_mapping = {'user_id': 1, 'sequence_id' : 2, 'problem_id' : 3, 'correct': 4}
+	col_mapping = {'user_id': 2, 'sequence_id' : 1, 'problem_id' : 3, 'correct': 4}
 
-	generate_PFA_data('../data/sql_data.csv', '../data/pfa_data.csv', col_mapping, 1)
+	generate_PFA_data('../data/2010_data_on_skill_no_dup.csv', '../data/pfa_data_2010_on_skill.csv', col_mapping, 1)
