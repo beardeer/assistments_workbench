@@ -45,16 +45,16 @@ def generate_PFA_data(input_file_path, output_file_path, col_mapping = {}, pfa_m
 			this_user[seq] = {'correct_num' : 0, 'incorrect_num' : 0}
 		this_user_seq = this_user[seq]
 
+		difficulty = data_cache.get(problem)
+
+		csv_writer.writerow([user, seq, this_user_seq['correct_num'], this_user_seq['incorrect_num'], difficulty, correct])
+
 		if correct == 1:
 			this_user_seq['correct_num'] += 1
 			correct = 1
 		else:
 			this_user_seq['incorrect_num'] += 1
 			correct = 0
-
-		difficulty = data_cache.get(problem)
-
-		csv_writer.writerow([user, seq, this_user_seq['correct_num'], this_user_seq['incorrect_num'], difficulty, correct])
 
 	input_file.close()
 	output_file.close()
