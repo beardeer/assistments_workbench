@@ -42,12 +42,19 @@ class BKTConverter(DataConverter):
 
 		input_file.close()
 
+		skill_id_count = 0
 		for seq_id in tqdm(seq_user_dict.keys()):
-			output_file_path = self.output_file_path.replace('nnn', seq_id)
+			skill_id_count += 1
+
+			users = seq_user_dict[seq_id]
+
+			if len(users) < 100:
+				continue
+			
+			output_file_path = self.output_file_path.replace('nnn', str(seq_id))
 			output_file = open(output_file_path, 'wb')
 			csv_writer = csv.writer(output_file, delimiter='\t')
 
-			users = seq_user_dict[seq_id]
 
 			for user_id in users.keys():
 				n = 0
@@ -60,9 +67,9 @@ class BKTConverter(DataConverter):
 
 
 if __name__ == "__main__":
-	col_mapping = {'user_id': 1, 'sequence_id' : 2, 'problem_id' : 3, 'correct': 4}
+	col_mapping = {'user_id': 1, 'sequence_id' : 3, 'problem_id' : 2, 'correct': 4}
 
-	converter = BKTConverter('../data/sql_data.csv', '../data/bkt/skill_nnn.csv', col_mapping)
+	converter = BKTConverter('../data/CAT_data.csv', '../data/bkt/nnn.csv', col_mapping)
 
 	converter.convert()
 
