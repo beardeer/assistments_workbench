@@ -22,6 +22,7 @@ def generate_PFA_data(input_file_path, output_file_path, col_mapping = {}, pfa_m
 	seq_col = col_mapping['sequence_id']
 	problem_col = col_mapping['problem_id']
 	correct_col = col_mapping['correct']
+	difficulty_col = col_mapping.get('difficulty', -1)
 
 	user_seq_dict = {}
 	seq_list = []
@@ -30,6 +31,8 @@ def generate_PFA_data(input_file_path, output_file_path, col_mapping = {}, pfa_m
 	# for tqdm to work
 	for row in tqdm(csv_reader):
 		seq = row[seq_col]
+		if int(seq) > 100:
+			continue
 		seq_list.append(seq)
 		csv_data.append(row)
 
@@ -43,6 +46,14 @@ def generate_PFA_data(input_file_path, output_file_path, col_mapping = {}, pfa_m
 		seq = row[seq_col]
 		problem = row[problem_col]
 		correct = ceil(float(row[correct_col]))
+
+		if int(seq) > 100:
+			continue
+
+		if difficulty_col != -1:
+			difficulty = float(row[difficulty_col])
+		else:
+			difficulty = data_cache.get(problem)
 		
 		correct_num_list = [0] * len(seq_list)
 		seq_pos = seq_list.index(seq)
@@ -55,12 +66,10 @@ def generate_PFA_data(input_file_path, output_file_path, col_mapping = {}, pfa_m
 			this_user[seq] = {'correct_num' : 0, 'incorrect_num' : 0}
 		this_user_seq = this_user[seq]
 
-		difficulty = data_cache.get(problem)
-
 		correct_num_list[seq_pos] = this_user_seq['correct_num']
 		correct_num_list[seq_len + seq_pos] = this_user_seq['incorrect_num']
 
-		output_data = [seq] + correct_num_list + [difficulty, correct]
+		output_data = [correct, seq, difficulty] + correct_num_list
 
 		csv_writer.writerow(output_data)
 
@@ -77,6 +86,6 @@ def generate_PFA_data(input_file_path, output_file_path, col_mapping = {}, pfa_m
 
 
 if __name__ == "__main__":
-	col_mapping = {'user_id': 1, 'sequence_id' : 2, 'problem_id' : 3, 'correct': 4}
+	col_mapping = {'user_id': 0, 'sequence_id' : 2, 'problem_id' : 1, 'difficulty': 6, 'correct': 3}
 
-	generate_PFA_data('../data/sql_data.csv', '../data/pfa_data.csv', col_mapping, 1)
+	generate_PFA_data('../data/CAT_full.csv', '../data/CAT_PFA_2.csv', col_mapping, 1)
