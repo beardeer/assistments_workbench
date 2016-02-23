@@ -77,6 +77,6 @@ def generate_PFA_data(input_file_path, output_file_path, col_mapping = {}, pfa_m
 
 
 if __name__ == "__main__":
-	col_mapping = {'user_id': 2, 'sequence_id' : 1, 'problem_id' : 3, 'correct': 4}
+	col_mapping = {'user_id': 1, 'sequence_id' : 2, 'problem_id' : 3, 'correct': 4}
 
-	generate_PFA_data('../data/2010_data_on_skill_no_dup.csv', '../data/pfa_data_2010_on_skill.csv', col_mapping, 1)
+	generate_PFA_data('../data/sql_data.csv', '../data/pfa_data.csv', col_mapping, 1)
