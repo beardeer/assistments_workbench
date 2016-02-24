@@ -2,6 +2,7 @@ from sklearn import metrics
 from sklearn.cross_validation import KFold
 from sklearn.preprocessing import OneHotEncoder
 import numpy as np
+from scipy import stats
 
 def classification_model(model, data, predictors, label, categorical_features = None, k = 5):
     data_len = len(data)
@@ -27,7 +28,8 @@ def classification_model(model, data, predictors, label, categorical_features = 
         y_pred = model.predict_proba(x_test)[:, 1]
 
         auc.append(metrics.roc_auc_score(y_test, y_pred))
-        r2.append(metrics.r2_score(y_test, y_pred))
+        slope, intercept, r_value, p_value, std_err = stats.linregress(y_test, y_pred)
+        r2.append(r_value**2)
         rmse.append(metrics.mean_squared_error(y_test, y_pred)**0.5)
 
     print 'auc:', np.mean(auc)
