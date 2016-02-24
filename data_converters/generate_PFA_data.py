@@ -8,6 +8,17 @@ from utility_dot_py.utility import DataCache
 
 
 def generate_PFA_data(input_file_path, output_file_path, col_mapping = {}, pfa_model = 1):
+	"""Summary
+
+	Args:
+	    input_file_path (TYPE): Description
+	    output_file_path (TYPE): Description
+	    col_mapping (dict, optional): Description
+	    pfa_model (int, optional): Description
+
+	Returns:
+	    TYPE: Description
+	"""
 	input_file = open(input_file_path, 'rb')
 	csv_reader = csv.reader(input_file)
 
@@ -31,8 +42,6 @@ def generate_PFA_data(input_file_path, output_file_path, col_mapping = {}, pfa_m
 	# for tqdm to work
 	for row in tqdm(csv_reader):
 		seq = row[seq_col]
-		if int(seq) > 100:
-			continue
 		seq_list.append(seq)
 		csv_data.append(row)
 
@@ -47,14 +56,11 @@ def generate_PFA_data(input_file_path, output_file_path, col_mapping = {}, pfa_m
 		problem = row[problem_col]
 		correct = ceil(float(row[correct_col]))
 
-		if int(seq) > 100:
-			continue
-
 		if difficulty_col != -1:
 			difficulty = float(row[difficulty_col])
 		else:
 			difficulty = data_cache.get(problem)
-		
+
 		correct_num_list = [0] * len(seq_list)
 		seq_pos = seq_list.index(seq)
 
@@ -66,10 +72,13 @@ def generate_PFA_data(input_file_path, output_file_path, col_mapping = {}, pfa_m
 			this_user[seq] = {'correct_num' : 0, 'incorrect_num' : 0}
 		this_user_seq = this_user[seq]
 
-		correct_num_list[seq_pos] = this_user_seq['correct_num']
-		correct_num_list[seq_len + seq_pos] = this_user_seq['incorrect_num']
+		if pfa_model == 1:
+			correct_num_list[seq_pos] = this_user_seq['correct_num']
+			correct_num_list[seq_len + seq_pos] = this_user_seq['incorrect_num']
+		elif pfa_model == 2:
+			correct_num_list = [this_user_seq['correct_num'], this_user_seq['incorrect_num']]
 
-		output_data = [correct, seq, difficulty] + correct_num_list
+		output_data = [correct, seq, user, difficulty] + correct_num_list
 
 		csv_writer.writerow(output_data)
 
@@ -86,6 +95,8 @@ def generate_PFA_data(input_file_path, output_file_path, col_mapping = {}, pfa_m
 
 
 if __name__ == "__main__":
-	col_mapping = {'user_id': 0, 'sequence_id' : 2, 'problem_id' : 1, 'difficulty': 6, 'correct': 3}
+	col_mapping = {'user_id': 0, 'sequence_id' : 2, 'problem_id' : 1, 'correct': 3, 'difficulty': 6}
 
-	generate_PFA_data('../data/CAT_full.csv', '../data/CAT_PFA_2.csv', col_mapping, 1)
+	col_mapping_2 = {'user_id': 0, 'sequence_id' : 2, 'problem_id' : 1, 'correct': 3}
+
+	generate_PFA_data('../data/CAT_full.csv', '../data/CAT_PFA_s.csv', col_mapping, 2)
