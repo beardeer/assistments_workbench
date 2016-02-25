@@ -8,6 +8,7 @@ Created on Mon Oct 26 21:11:31 2015
 import data_reader as dr
 import csv
 from copy import copy
+from tqdm import tqdm
 
 support_header = \
 {
@@ -78,7 +79,7 @@ def attach_query_result_by_header(input_location, output_location):
 
     print 'running queries ...'
     n = 0
-    for row in reader:
+    for row in tqdm(reader):
         new_row = copy(row)
         for h in contained_header:
             input_args = __build_input_args(row, h, header_idx_dict)
@@ -88,9 +89,6 @@ def attach_query_result_by_header(input_location, output_location):
                     cache[new_header][cache_keys] = query(**input_args)
                 new_row.append(cache[new_header][cache_keys])
         writer.writerow(new_row)
-        n += 1
-        if n % 1000 == 0:
-            print n
 
     input_file.close()
     output_file.close()
