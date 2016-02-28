@@ -97,6 +97,6 @@ def generate_PFA_data(input_file_path, output_file_path, col_mapping = {}, pfa_m
 if __name__ == "__main__":
 	col_mapping = {'user_id': 0, 'sequence_id' : 2, 'problem_id' : 1, 'correct': 3, 'difficulty': 6}
 
-	col_mapping_2 = {'user_id': 1, 'sequence_id' : 4, 'problem_id' : 2, 'correct': 3}
+	col_mapping_2 = {'user_id': 1, 'sequence_id' : 6, 'problem_id' : 2, 'correct': 4}
 
-	generate_PFA_data('../data/CAT_full.csv', '../data/CAT_PFA_simple.csv', col_mapping, 2)
+	generate_PFA_data('../data/0910_no_dup.csv', '../data/0910_no_dup_PFA.csv', col_mapping, 2)

@@ -57,4 +57,4 @@ docs/_build/
 target/
 .ipynb_checkpoints/
 config.ini
-*.csv
+data/

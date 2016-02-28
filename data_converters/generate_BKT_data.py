@@ -48,9 +48,9 @@ class BKTConverter(DataConverter):
 
 			users = seq_user_dict[seq_id]
 
-			if len(users) < 100:
-				continue
-			
+			# if len(users) < 100:
+			# 	continue
+
 			output_file_path = self.output_file_path.replace('nnn', str(seq_id))
 			output_file = open(output_file_path, 'wb')
 			csv_writer = csv.writer(output_file, delimiter='\t')
@@ -67,9 +67,9 @@ class BKTConverter(DataConverter):
 
 
 if __name__ == "__main__":
-	col_mapping = {'user_id': 1, 'sequence_id' : 3, 'problem_id' : 2, 'correct': 4}
+	col_mapping = {'user_id': 1, 'sequence_id' : 2, 'problem_id' : 3, 'correct': 4}
 
-	converter = BKTConverter('../data/CAT_data.csv', '../data/bkt/nnn.csv', col_mapping)
+	converter = BKTConverter('../data/1415_full.csv', '../data/bkt/nnn.txt', col_mapping)
 
 	converter.convert()
 
