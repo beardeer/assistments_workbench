@@ -29,7 +29,6 @@ class BKTConverter(DataConverter):
 			problem = row[problem_col]
 			correct = ceil(float(row[correct_col]))
 
-
 			if seq_user_dict.has_key(seq) == False:
 				seq_user_dict[seq] = {}
 			this_seq = seq_user_dict.get(seq)
@@ -48,13 +47,9 @@ class BKTConverter(DataConverter):
 
 			users = seq_user_dict[seq_id]
 
-			# if len(users) < 100:
-			# 	continue
-
 			output_file_path = self.output_file_path.replace('nnn', str(seq_id))
 			output_file = open(output_file_path, 'wb')
 			csv_writer = csv.writer(output_file, delimiter='\t')
-
 
 			for user_id in users.keys():
 				n = 0

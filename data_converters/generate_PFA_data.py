@@ -64,12 +64,8 @@ def generate_PFA_data(input_file_path, output_file_path, col_mapping = {}, pfa_m
 		correct_num_list = [0] * len(seq_list)
 		seq_pos = seq_list.index(seq)
 
-		# if user_seq_dict.has_key(user) == False:
-		# 	user_seq_dict[user] = {}
 		this_user = user_seq_dict.setdefault(user, {})
 
-		# if this_user.has_key(seq) == False:
-		# 	this_user[seq] = {'correct_num' : 0, 'incorrect_num' : 0}
 		this_user_seq = this_user.setdefault(seq, {'correct_num' : 0, 'incorrect_num' : 0})
 
 		if pfa_model == 1:
