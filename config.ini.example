@@ -1,0 +1,11 @@
+[postgres]
+
+username = username
+password = password
+
+[mongodb]
+
+
+[localfiles]
+
+data_path = C:\Workarea\Data

@@ -5,7 +5,7 @@ Created on Mon Oct 26 21:11:31 2015
 @author: xxiong
 """
 
-import data_reader as dr
+import db_reader as dr
 import csv
 from copy import copy
 from tqdm import tqdm
@@ -16,7 +16,7 @@ support_header = \
         {
         'sequence_difficulty': dr.problem_set_difficulty
         },
-        
+
     tuple(['problem_id']):
         {
         'problem_difficulty': dr.problem_difficulty
@@ -29,7 +29,7 @@ support_header = \
             dr.user_all_class_assignment_performance,
         'user_all_homework_completion_rate': dr.user_all_homework_completion_rate
         },
-        
+
     tuple(['mastery_speed']):
         {
         'mastery_speed_bin': dr.mastery_speed_bin
