@@ -3,6 +3,7 @@ from sklearn.cross_validation import KFold
 from sklearn.preprocessing import OneHotEncoder
 import numpy as np
 from scipy import stats
+from tqdm import tqdm
 
 def classification_model(model, data, predictors, label, categorical_features = None, k = 5):
     data_len = len(data)
@@ -11,7 +12,7 @@ def classification_model(model, data, predictors, label, categorical_features = 
     print 'Predictors:', predictors
 
     kf = KFold(data_len, n_folds = k)
-    for train, test in kf:
+    for train, test in tqdm(kf):
         x_train = (data[predictors].iloc[train,:])
         y_train = data[label].iloc[train]
         x_test = (data[predictors].iloc[test,:])

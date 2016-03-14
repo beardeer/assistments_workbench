@@ -60,6 +60,8 @@ class BKTConverter(DataConverter):
 
 			output_file.close()
 
+		return seq_user_dict
+
 
 if __name__ == "__main__":
 	col_mapping = {'user_id': 1, 'sequence_id' : 2, 'problem_id' : 3, 'correct': 4}
