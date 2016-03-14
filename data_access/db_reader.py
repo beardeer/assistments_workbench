@@ -12,17 +12,19 @@ Attributes:
     username (TYPE): Description
 """
 
+from datetime import datetime
+
 import sqlsoup
 from sqlalchemy import or_, and_, distinct, func
 
-from config_reader import config
-from datetime import datetime
+from assistments_workbench.config_reader import config
 
 username = config.get('postgres', 'username')
 password = config.get('postgres', 'password')
+db_url = config.get('postgres', 'db_url')
 
-db_str = 'postgresql://%s:%s@as14.cs.wpi.edu/assistment_production' % \
-    (username, password)
+db_str = 'postgresql://%s:%s@%s/assistment_production' % \
+    (username, password, db_url)
 
 db = sqlsoup.SQLSoup(db_str)
 session = db.session
@@ -38,10 +40,10 @@ session = db.session
 
 def user_id_to_student_id(user_id):
     """Summary
-    
+
     Args:
         user_id (TYPE): Description
-    
+
     Returns:
         TYPE: Description
     """
@@ -52,10 +54,10 @@ def user_id_to_student_id(user_id):
 
 def student_id_to_user_id(student_id):
     """Summary
-    
+
     Args:
         student_id (TYPE): Description
-    
+
     Returns:
         TYPE: Description
     """
@@ -67,7 +69,7 @@ def student_id_to_user_id(student_id):
 # users
 def total_user_num():
     """Summary
-    
+
     Returns:
         TYPE: Description
     """
@@ -76,7 +78,7 @@ def total_user_num():
 
 def student_num():
     """Summary
-    
+
     Returns:
         TYPE: Description
     """
@@ -85,7 +87,7 @@ def student_num():
 
 def teacher_num():
     """Summary
-    
+
     Returns:
         TYPE: Description
     """
@@ -94,7 +96,7 @@ def teacher_num():
 
 def parent_num():
     """Summary
-    
+
     Returns:
         TYPE: Description
     """
@@ -106,7 +108,7 @@ def parent_num():
 
 def class_num():
     """Summary
-    
+
     Returns:
         TYPE: Description
     """
@@ -115,7 +117,7 @@ def class_num():
 
 def school_num():
     """Summary
-    
+
     Returns:
         TYPE: Description
     """
@@ -124,7 +126,7 @@ def school_num():
 
 def enabled_class_num():
     """Summary
-    
+
     Returns:
         TYPE: Description
     """
@@ -135,7 +137,7 @@ def enabled_class_num():
 
 def total_class_assignment_num():
     """Summary
-    
+
     Returns:
         TYPE: Description
     """
@@ -144,7 +146,7 @@ def total_class_assignment_num():
 
 def class_assignment_num():
     """Summary
-    
+
     Returns:
         TYPE: Description
     """
@@ -152,7 +154,7 @@ def class_assignment_num():
 
 def relearning_assignment_num():
     """Summary
-    
+
     Returns:
         TYPE: Description
     """
@@ -161,7 +163,7 @@ def relearning_assignment_num():
 
 def reassessment_assignment_num():
     """Summary
-    
+
     Returns:
         TYPE: Description
     """
@@ -173,7 +175,7 @@ def reassessment_assignment_num():
 
 def total_probelm_num():
     """Summary
-    
+
     Returns:
         TYPE: Description
     """
@@ -182,7 +184,7 @@ def total_probelm_num():
 
 def main_probelm_num():
     """Summary
-    
+
     Returns:
         TYPE: Description
     """
@@ -191,7 +193,7 @@ def main_probelm_num():
 
 def total_problem_set_num():
     """Summary
-    
+
     Returns:
         TYPE: Description
     """
@@ -200,7 +202,7 @@ def total_problem_set_num():
 
 def skill_builder_problem_set_num():
     """Summary
-    
+
     Returns:
         TYPE: Description
     """
@@ -218,7 +220,7 @@ def skill_builder_problem_set_num():
 
 def problem_log_num():
     """Summary
-    
+
     Returns:
         TYPE: Description
     """
@@ -227,7 +229,7 @@ def problem_log_num():
 
 def main_problem_log_num():
     """Summary
-    
+
     Returns:
         TYPE: Description
     """
@@ -236,11 +238,11 @@ def main_problem_log_num():
 
 def mastery_speed(user_id, class_assignment_id):
     """Summary
-    
+
     Args:
         user_id (TYPE): Description
         class_assignment_id (TYPE): Description
-    
+
     Returns:
         TYPE: Description
     """
@@ -252,11 +254,11 @@ def mastery_speed(user_id, class_assignment_id):
 
 def user_assignemnt_correct_num(user_id, class_assignment_id):
     """Summary
-    
+
     Args:
         user_id (TYPE): Description
         class_assignment_id (TYPE): Description
-    
+
     Returns:
         TYPE: Description
     """
@@ -269,11 +271,11 @@ def user_assignemnt_correct_num(user_id, class_assignment_id):
 
 def user_assignemnt_incorrect_num(user_id, class_assignment_id):
     """Summary
-    
+
     Args:
         user_id (TYPE): Description
         class_assignment_id (TYPE): Description
-    
+
     Returns:
         TYPE: Description
     """
@@ -286,11 +288,11 @@ def user_assignemnt_incorrect_num(user_id, class_assignment_id):
 
 def user_assignment_performance(user_id, class_assignment_id):
     """Summary
-    
+
     Args:
         user_id (TYPE): Description
         class_assignment_id (TYPE): Description
-    
+
     Returns:
         TYPE: Description
     """
@@ -301,11 +303,11 @@ def user_assignment_performance(user_id, class_assignment_id):
 
 def user_assignment_bottom_hint_num(user_id, class_assignment_id):
     """Summary
-    
+
     Args:
         user_id (TYPE): Description
         class_assignment_id (TYPE): Description
-    
+
     Returns:
         TYPE: Description
     """
@@ -319,7 +321,7 @@ def user_assignment_bottom_hint_num(user_id, class_assignment_id):
 
 def all_problem_difficulty():
     """Summary
-    
+
     Returns:
         TYPE: Description
     """
@@ -330,7 +332,7 @@ def all_problem_difficulty():
 
 def main_problem_difficulty():
     """Summary
-    
+
     Returns:
         TYPE: Description
     """
@@ -343,10 +345,10 @@ def main_problem_difficulty():
 
 def problem_difficulty(problem_id):
     """Summary
-    
+
     Args:
         problem_id (TYPE): Description
-    
+
     Returns:
         TYPE: Description
     """
@@ -362,10 +364,10 @@ def problem_difficulty(problem_id):
 
 def problem_set_difficulty(sequence_id):
     """Summary
-    
+
     Args:
         sequence_id (TYPE): Description
-    
+
     Returns:
         TYPE: Description
     """
@@ -385,10 +387,10 @@ def problem_set_difficulty(sequence_id):
 
 def user_all_class_assignment_performance(user_id):
     """Summary
-    
+
     Args:
         user_id (TYPE): Description
-    
+
     Returns:
         TYPE: Description
     """
@@ -406,16 +408,16 @@ def user_all_class_assignment_performance(user_id):
                             problem_logs.original == 1,
                             problem_logs.user_id == user_id).count()
     return get_performance(correct, incorrect)
-    
-    
+
+
 # assignment_log
 
 def user_all_homework_completion_rate(user_id):
     """Summary
-    
+
     Args:
         user_id (TYPE): Description
-    
+
     Returns:
         TYPE: Description
     """
@@ -437,7 +439,7 @@ def user_all_homework_completion_rate(user_id):
 
 def arrs_record_num():
     """Summary
-    
+
     Returns:
         TYPE: Description
     """
@@ -446,7 +448,7 @@ def arrs_record_num():
 
 def reassessment_test_num():
     """Summary
-    
+
     Returns:
         TYPE: Description
     """
@@ -455,7 +457,7 @@ def reassessment_test_num():
 
 def reassessment_problem_nums():
     """Summary
-    
+
     Returns:
         TYPE: Description
     """
@@ -464,7 +466,7 @@ def reassessment_problem_nums():
 
 def relearning_num():
     """Summary
-    
+
     Returns:
         TYPE: Description
     """
@@ -473,7 +475,7 @@ def relearning_num():
 
 def arrs_class_num():
     """Summary
-    
+
     Returns:
         TYPE: Description
     """
@@ -484,7 +486,7 @@ def arrs_class_num():
 
 def arrs_enable_class_num():
     """Summary
-    
+
     Returns:
         TYPE: Description
     """
@@ -498,7 +500,7 @@ def arrs_enable_class_num():
 
 def arrs_student_num():
     """Summary
-    
+
     Returns:
         TYPE: Description
     """
@@ -508,10 +510,10 @@ def arrs_student_num():
 
 def user_reassessment_performance(user_id):
     """Summary
-    
+
     Args:
         user_id (TYPE): Description
-    
+
     Returns:
         TYPE: Description
     """
@@ -529,10 +531,10 @@ def user_reassessment_performance(user_id):
 
 def mastery_speed_bin(mastery_speed):
     """Summary
-    
+
     Args:
         mastery_speed (TYPE): Description
-    
+
     Returns:
         TYPE: Description
     """
@@ -552,10 +554,10 @@ def mastery_speed_bin(mastery_speed):
 
 def user_num_by_role_id(role_id):
     """Summary
-    
+
     Args:
         role_id (TYPE): Description
-    
+
     Returns:
         TYPE: Description
     """
@@ -564,10 +566,10 @@ def user_num_by_role_id(role_id):
 
 def class_assignment_num_by_assignment_type_id(type_id):
     """Summary
-    
+
     Args:
         type_id (TYPE): Description
-    
+
     Returns:
         TYPE: Description
     """
@@ -577,11 +579,11 @@ def class_assignment_num_by_assignment_type_id(type_id):
 
 def get_performance(correct_num, incorrect_num):
     """Summary
-    
+
     Args:
         correct_num (TYPE): Description
         incorrect_num (TYPE): Description
-    
+
     Returns:
         TYPE: Description
     """
@@ -593,11 +595,11 @@ def get_performance(correct_num, incorrect_num):
 
 def get_difficulty(correct_num, incorrect_num):
     """Summary
-    
+
     Args:
         correct_num (TYPE): Description
         incorrect_num (TYPE): Description
-    
+
     Returns:
         TYPE: Description
     """
