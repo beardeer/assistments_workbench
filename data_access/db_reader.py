@@ -507,6 +507,15 @@ def arrs_student_num():
     return session.query\
     (distinct(db.student_reassessment_records.student_id)).count()
 
+def reassessment_problem_num_by_date(date_before):
+    table = db.student_reassessment_problems
+    return table.filter(table.release_date < date_before).count()
+
+
+def relearning_assignment_num_by_date(date_before):
+    table = db.student_relearning_records
+    return table.filter(table.assign_date < date_before).count()
+
 
 def user_reassessment_performance(user_id):
     """Summary
@@ -529,6 +538,10 @@ def user_reassessment_performance(user_id):
     return get_performance(correct, incorrect)
 
 
+# ==============================================================================
+#  supporting functions
+# ==============================================================================
+
 def mastery_speed_bin(mastery_speed):
     """Summary
 
@@ -546,11 +559,6 @@ def mastery_speed_bin(mastery_speed):
         return 2
     else:
         return 3
-
-
-# ==============================================================================
-#  supporting functions
-# ==============================================================================
 
 def user_num_by_role_id(role_id):
     """Summary
