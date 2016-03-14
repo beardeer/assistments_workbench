@@ -102,6 +102,9 @@ def parent_num():
     """
     return user_num_by_role_id(7)
 
+def valid_student_num():
+    return session.query\
+    (distinct(db.assignment_logs.user_id)).count()
 
 # schools and classes
 
@@ -481,7 +484,6 @@ def arrs_class_num():
     """
     return session.query\
     (distinct(db.student_reassessment_records.student_class_id)).count()
-    return db.student_reassessment_records.student_class_id
 
 
 def arrs_enable_class_num():
@@ -619,6 +621,7 @@ def get_difficulty(correct_num, incorrect_num):
 if __name__ == "__main__":
     import datetime
 
+    print student_num()
     print datetime.datetime.now()
     print user_all_class_assignment_performance(336579)
     print problem_difficulty(163430)
