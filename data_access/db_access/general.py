@@ -19,15 +19,9 @@ from sqlalchemy import or_, and_, distinct, func
 
 from assistments_workbench.config_reader import config
 
-username = config.get('postgres', 'username')
-password = config.get('postgres', 'password')
-db_url = config.get('postgres', 'db_url')
+from connector import db, session
+from supporting_func import get_performance, get_difficulty
 
-db_str = 'postgresql://%s:%s@%s/assistment_production' % \
-    (username, password, db_url)
-
-db = sqlsoup.SQLSoup(db_str)
-session = db.session
 
 now = datetime.now()
 
@@ -38,34 +32,6 @@ now = datetime.now()
 
 
 # id mapping
-
-
-def user_id_to_student_id(user_id):
-    """Summary
-
-    Args:
-        user_id (TYPE): Description
-
-    Returns:
-        TYPE: Description
-    """
-    table = db.user_roles
-    return table.filter(table.user_id == user_id,
-                        table.role_id == 4).one().id
-
-
-def student_id_to_user_id(student_id):
-    """Summary
-
-    Args:
-        student_id (TYPE): Description
-
-    Returns:
-        TYPE: Description
-    """
-    table = db.user_roles
-    return table.filter(table.id == student_id,
-                        table.role_id == 4).one().user_id
 
 
 # users
@@ -109,6 +75,9 @@ def valid_student_num_after_date(date_after = now):
     return table.filter(table.start_time > date_after).distinct(table.user_id).count()
 
 # schools and classes
+
+def class_num():
+    return class_num_after_date(date_after = now)
 
 def class_num_after_date(date_after = now):
     """Summary
@@ -439,191 +408,10 @@ def user_all_homework_completion_rate(user_id):
                              assignment_logs.end_time == None).count()
     return get_performance(complete, incomplete)
 
-# arrs data
-
-
-def arrs_record_num():
-    """Summary
-
-    Returns:
-        TYPE: Description
-    """
-    return db.student_reassessment_records.count()
-
-
-def reassessment_test_num():
-    """Summary
-
-    Returns:
-        TYPE: Description
-    """
-    return db.student_reassessment_tests.count()
-
-
-def reassessment_problem_nums():
-    """Summary
-
-    Returns:
-        TYPE: Description
-    """
-    return db.student_reassessment_problems.count()
-
-
-def relearning_num():
-    """Summary
-
-    Returns:
-        TYPE: Description
-    """
-    return db.student_relearning_records.count()
-
-
-def arrs_class_num():
-    """Summary
-
-    Returns:
-        TYPE: Description
-    """
-    return session.query\
-    (distinct(db.student_reassessment_records.student_class_id)).count()
-
-
-def arrs_enable_class_num():
-    """Summary
-
-    Returns:
-        TYPE: Description
-    """
-    arrs = db.student_reassessment_records
-    classes = db.with_labels(db.student_classes)
-    join = db.join(arrs, classes,
-                   arrs.student_class_id == classes.student_classes_id)
-    where = classes.student_classes_enabled == True
-    return join.filter(where).distinct(arrs.student_class_id).count()
-
-
-def arrs_student_num():
-    """Summary
-
-    Returns:
-        TYPE: Description
-    """
-    return session.query\
-    (distinct(db.student_reassessment_records.student_id)).count()
-
-def reassessment_problem_num_by_date(date_before):
-    table = db.student_reassessment_problems
-    return table.filter(table.release_date < date_before).count()
-
-
-def relearning_assignment_num_by_date(date_before):
-    table = db.student_relearning_records
-    return table.filter(table.assign_date < date_before).count()
-
-
-def user_reassessment_performance(user_id):
-    """Summary
-
-    Args:
-        user_id (TYPE): Description
-
-    Returns:
-        TYPE: Description
-    """
-    arrs = db.student_reassessment_problems
-    problem_logs = db.with_labels(db.problem_logs)
-    join = db.join(arrs, problem_logs,
-                   arrs.problem_log_id == problem_logs.problem_logs_id)
-    where = arrs.student_id == user_id_to_student_id(user_id)
-    correct = join.filter(where,
-                          problem_logs.problem_logs_correct == 1).count()
-    incorrect = join.filter(where,
-                            problem_logs.problem_logs_correct < 1).count()
-    return get_performance(correct, incorrect)
-
-
-# ==============================================================================
-#  supporting functions
-# ==============================================================================
-
-def mastery_speed_bin(mastery_speed):
-    """Summary
-
-    Args:
-        mastery_speed (TYPE): Description
-
-    Returns:
-        TYPE: Description
-    """
-    if mastery_speed < 3:
-        return -1
-    if 3 <= mastery_speed <= 4:
-        return 1
-    elif 5 <= mastery_speed <= 7:
-        return 2
-    else:
-        return 3
-
-def user_num_by_role_id(role_id):
-    """Summary
-
-    Args:
-        role_id (TYPE): Description
-
-    Returns:
-        TYPE: Description
-    """
-    return db.user_roles.filter(db.user_roles.role_id == role_id).count()
-
-
-def class_assignment_num_by_assignment_type_id(type_id):
-    """Summary
-
-    Args:
-        type_id (TYPE): Description
-
-    Returns:
-        TYPE: Description
-    """
-    return db.class_assignments.filter\
-        (db.class_assignments.assignment_type_id == type_id).count()
-
-
-def get_performance(correct_num, incorrect_num):
-    """Summary
-
-    Args:
-        correct_num (TYPE): Description
-        incorrect_num (TYPE): Description
-
-    Returns:
-        TYPE: Description
-    """
-    if correct_num == 0 and incorrect_num == 0:
-        return 0
-    else:
-        return float(correct_num) / (correct_num + incorrect_num)
-
-
-def get_difficulty(correct_num, incorrect_num):
-    """Summary
-
-    Args:
-        correct_num (TYPE): Description
-        incorrect_num (TYPE): Description
-
-    Returns:
-        TYPE: Description
-    """
-    if correct_num == 0 and incorrect_num == 0:
-        return 0
-    else:
-        return float(incorrect_num) / (correct_num + incorrect_num)
 
 if __name__ == "__main__":
     import datetime
 
-    print student_num()
     print datetime.datetime.now()
     print user_all_class_assignment_performance(336579)
     print problem_difficulty(163430)
