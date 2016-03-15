@@ -81,10 +81,16 @@ def reassessment_problem_num_by_date(date_before):
     table = db.student_reassessment_problems
     return table.filter(table.release_date < date_before).count()
 
+def completed_reassessment_problem_num_by_date(date_beofre):
+    return 0
+
 
 def relearning_assignment_num_by_date(date_before):
     table = db.student_relearning_records
     return table.filter(table.assign_date < date_before).count()
+
+def completed_relearning_assignment_num_by_date(date_before):
+    return 0
 
 
 def user_reassessment_performance(user_id):
