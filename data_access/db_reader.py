@@ -29,6 +29,8 @@ db_str = 'postgresql://%s:%s@%s/assistment_production' % \
 db = sqlsoup.SQLSoup(db_str)
 session = db.session
 
+now = datetime.now()
+
 
 # ==============================================================================
 #  main functions
@@ -102,20 +104,20 @@ def parent_num():
     """
     return user_num_by_role_id(7)
 
-def valid_student_num():
-    return session.query\
-    (distinct(db.assignment_logs.user_id)).count()
+def valid_student_num_after_date(date_after = now):
+    table = db.assignment_logs
+    return table.filter(table.start_time > date_after).distinct(table.user_id).count()
 
 # schools and classes
 
-
-def class_num():
+def class_num_after_date(date_after = now):
     """Summary
 
     Returns:
         TYPE: Description
     """
-    return db.student_classes.count()
+    table = db.student_classes
+    return table.filter(table.created_at > date_after).count()
 
 
 def school_num():
