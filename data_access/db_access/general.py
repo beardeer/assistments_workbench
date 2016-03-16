@@ -327,12 +327,12 @@ def problem_difficulty(problem_id):
         TYPE: Description
     """
     table = db.problem_logs
-    correct = db.problem_logs.filter(table.correct == 1,
-                                     table.original == 1,
-                                     table.problem_id == problem_id).count()
-    incorrect = db.problem_logs.filter(table.correct < 1,
-                                       table.original == 1,
-                                       table.problem_id == problem_id).count()
+    correct = table.filter(table.correct == 1,
+        table.original == 1,
+        table.problem_id == problem_id).count()
+    incorrect = table.filter(table.correct < 1,
+        table.original == 1,
+        table.problem_id == problem_id).count()
     return get_difficulty(correct, incorrect)
 
 
