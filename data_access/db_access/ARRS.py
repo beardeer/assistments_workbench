@@ -87,8 +87,6 @@ def completed_reassessment_problem_num_by_date(date_before):
         table.release_date < date_before,
         table.problem_log_id != None
         ).count()
-    return 0
-
 
 def relearning_assignment_num_by_date(date_before):
     table = db.student_relearning_records
