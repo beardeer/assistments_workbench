@@ -11,7 +11,7 @@ def classification_model(model, data, predictors, label, categorical_features = 
 
     print 'Predictors:', predictors
 
-    kf = KFold(data_len, n_folds = k)
+    kf = KFold(data_len, n_folds = k, shuffle = True)
     for train, test in tqdm(kf):
         x_train = (data[predictors].iloc[train,:])
         y_train = data[label].iloc[train]
