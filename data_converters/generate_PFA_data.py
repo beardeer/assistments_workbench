@@ -1,10 +1,11 @@
-
 import csv
+import os
 from math import ceil
 from tqdm import tqdm
 
-from assistments_workbench.data_reader import problem_difficulty
+from assistments_workbench.data_access.db_access.general import problem_difficulty
 from utility_dot_py.utility import DataCache
+from assistments_workbench.config_reader import config
 
 
 def generate_PFA_data(input_file_path, output_file_path, col_mapping = {}, pfa_model = 1):
@@ -93,6 +94,9 @@ def generate_PFA_data(input_file_path, output_file_path, col_mapping = {}, pfa_m
 if __name__ == "__main__":
 	col_mapping = {'user_id': 0, 'sequence_id' : 2, 'problem_id' : 1, 'correct': 3, 'difficulty': 6}
 
-	col_mapping_2 = {'user_id': 1, 'sequence_id' : 6, 'problem_id' : 2, 'correct': 4}
+	col_mapping_2 = {'user_id': 1, 'sequence_id' : 2, 'problem_id' : 3, 'correct': 4}
 
-	generate_PFA_data('../data/0910_no_dup.csv', '../data/0910_no_dup_PFA.csv', col_mapping, 2)
+	input_data = os.path.join(config.get('localfiles', 'data_path'), 'sql_data_2.csv')
+	output_data = os.path.join(config.get('localfiles', 'data_path'), 'sql_data_2_pfa.txt')
+
+	generate_PFA_data(input_data, output_data, col_mapping_2, 2)
