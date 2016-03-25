@@ -108,14 +108,23 @@ def user_reassessment_performance(user_id):
     Returns:
         TYPE: Description
     """
-    arrs = db.student_reassessment_problems
+    res_prbs = db.student_reassessment_problems
     problem_logs = db.with_labels(db.problem_logs)
-    join = db.join(arrs, problem_logs,
-                   arrs.problem_log_id == problem_logs.problem_logs_id)
-    where = arrs.student_id == user_id_to_student_id(user_id)
+    join = db.join(res_prbs, problem_logs,
+                   res_prbs.problem_log_id == problem_logs.problem_logs_id)
+    where = res_prbs.student_id == user_id_to_student_id(user_id)
     correct = join.filter(where,
                           problem_logs.problem_logs_correct == 1).count()
     incorrect = join.filter(where,
                             problem_logs.problem_logs_correct < 1).count()
     return get_performance(correct, incorrect)
+
+def reassessment_test_num_by_levels():
+    needed_levels = {1: None, 2: None, 3: None, 4: None}
+    res_prbs = db.student_reassessment_problems
+    for key in needed_levels.keys():
+        needed_levels[key] = res_prbs.filter(
+            res_prbs.reassessment_level == key
+            ).count()
+    return needed_levels
 
