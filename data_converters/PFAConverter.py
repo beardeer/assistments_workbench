@@ -24,9 +24,12 @@ def PFAConverter(input_file_path, output_file_path, col_mapping = {}, pfa_model 
 	csv_reader = csv.reader(input_file)
 
 	if output_file_path is None:
-        output_file_path = input_file_path.split('.')[0] + '_pfa.' + input_path.split('.')[1]
+	    output_file_path = input_file_path.split('.')[0] + '_pfa.' + input_file_path.split('.')[1]
 	output_file = open(output_file_path, 'wb')
 	csv_writer = csv.writer(output_file)
+
+    if pfa_model == 2:
+        csv_writer.writerow(['correct', 'skill_id', 'problem_id', 'pre_corr', 'pre_incorr'])
 
 	header = csv_reader.next()
 
@@ -90,8 +93,7 @@ def PFAConverter(input_file_path, output_file_path, col_mapping = {}, pfa_model 
 	input_file.close()
 	output_file.close()
 
-	print len(output_data)
-
+	return output_file_path
 
 if __name__ == "__main__":
 	col_mapping = {'user_id': 0, 'sequence_id' : 2, 'problem_id' : 1, 'correct': 3, 'difficulty': 6}
@@ -101,4 +103,4 @@ if __name__ == "__main__":
 	input_data = os.path.join(config.get('localfiles', 'data_path'), 'sql_data_2.csv')
 	output_data = os.path.join(config.get('localfiles', 'data_path'), 'sql_data_2_pfa.txt')
 
-	BKTConverter(input_data, output_data, col_mapping_2, 2)
+	PFAConverter(input_data, output_data, col_mapping_2, 2)
