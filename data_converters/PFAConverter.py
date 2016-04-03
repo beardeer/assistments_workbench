@@ -28,9 +28,6 @@ def PFAConverter(input_file_path, output_file_path, col_mapping = {}, pfa_model 
 	output_file = open(output_file_path, 'wb')
 	csv_writer = csv.writer(output_file)
 
-    if pfa_model == 2:
-        csv_writer.writerow(['correct', 'skill_id', 'problem_id', 'pre_corr', 'pre_incorr'])
-
 	header = csv_reader.next()
 
 	data_cache = DataCache(problem_difficulty)
@@ -54,6 +51,16 @@ def PFAConverter(input_file_path, output_file_path, col_mapping = {}, pfa_model 
 	seq_list = list(set(seq_list))
 	seq_len = len(seq_list)
 	seq_list.sort()
+
+	if pfa_model == 1:
+		seq_pre_header = []
+		[seq_pre_header.append(str(i)+'_corr') for i in seq_list]
+		[seq_pre_header.append(str(i)+'_incorr') for i in seq_list]
+		new_header = ['correct', 'skill_id', 'user_id', 'difficulty'] + seq_pre_header
+		csv_writer.writerow(new_header)
+	elif pfa_model == 2:
+		csv_writer.writerow(['correct', 'skill_id', 'user_id', 'difficulty', 'pre_corr', 'pre_incorr'])
+
 	seq_list = seq_list + seq_list
 
 	for row in tqdm(csv_data):
