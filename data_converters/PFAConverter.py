@@ -23,6 +23,8 @@ def PFAConverter(input_file_path, output_file_path, col_mapping = {}, pfa_model 
 	input_file = open(input_file_path, 'rb')
 	csv_reader = csv.reader(input_file)
 
+	if output_file_path is None:
+        output_file_path = input_file_path.split('.')[0] + '_pfa.' + input_path.split('.')[1]
 	output_file = open(output_file_path, 'wb')
 	csv_writer = csv.writer(output_file)
 

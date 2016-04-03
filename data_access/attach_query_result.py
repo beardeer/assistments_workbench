@@ -5,56 +5,61 @@ Created on Mon Oct 26 21:11:31 2015
 @author: xxiong
 """
 
-import db_reader as dr
+import assistments_workbench.data_access.db_access.general as dr
+import assistments_workbench.data_access.db_access.ARRS as dr_arrs
+import assistments_workbench.data_access.db_access.supporting_func as dr_supt
 import csv
 from copy import copy
 from tqdm import tqdm
 
 support_header = \
 {
-    tuple(['sequence_id']):
-        {
-        'sequence_difficulty': dr.problem_set_difficulty
-        },
+    # tuple(['sequence_id']):
+    #     {
+    #     'sequence_difficulty': dr.problem_set_difficulty
+    #     },
 
     tuple(['problem_id']):
         {
         'problem_difficulty': dr.problem_difficulty
         },
 
-    tuple(['user_id']):
-        {
-        'user_reassessment_performance': dr.user_reassessment_performance,
-        'user_all_class_assignment_performance':
-            dr.user_all_class_assignment_performance,
-        'user_all_homework_completion_rate': dr.user_all_homework_completion_rate
-        },
+    # tuple(['user_id']):
+    #     {
+    #     'user_reassessment_performance': dr_arrs.user_reassessment_performance,
+    #     'user_all_class_assignment_performance':
+    #         dr.user_all_class_assignment_performance,
+    #     'user_all_homework_completion_rate': dr.user_all_homework_completion_rate
+    #     },
 
-    tuple(['mastery_speed']):
-        {
-        'mastery_speed_bin': dr.mastery_speed_bin
-        }
+    # tuple(['mastery_speed']):
+    #     {
+    #     'mastery_speed_bin': dr_supt.mastery_speed_bin
+    #     },
 
-    ('user_id', 'class_assignment_id'):
-        {
-        'user_assignment_performance': dr.user_assignment_performance,
-        'user_assignemnt_correct_num': dr.user_assignemnt_correct_num,
-        'user_assignemnt_incorrect_num': dr.user_assignemnt_incorrect_num,
-        'user_assignment_bottom_hint_num': dr.user_assignment_bottom_hint_num,
-        'mastery_speed':
-            dr.mastery_speed
-        }
+    # ('user_id', 'class_assignment_id'):
+    #     {
+    #     'user_assignment_performance': dr.user_assignment_performance,
+    #     'user_assignemnt_correct_num': dr.user_assignemnt_correct_num,
+    #     'user_assignemnt_incorrect_num': dr.user_assignemnt_incorrect_num,
+    #     'user_assignment_bottom_hint_num': dr.user_assignment_bottom_hint_num,
+    #     'mastery_speed':
+    #         dr.mastery_speed
+    #     }
 }
 
 
-def attach_query_result_by_header(input_location, output_location):
-    input_file = open(input_location, 'rb')
-    output_file = open(output_location, 'wb')
+def attach_query_result_by_header(input_path, output_path = None):
+    if output_path is None:
+        output_path = input_path.split('.')[0] + '_w_feature.' + input_path.split('.')[1]
+    input_file = open(input_path, 'rb')
+    output_file = open(output_path, 'wb')
     reader = csv.reader(input_file)
     writer = csv.writer(output_file)
 
     cache = {}
     header = reader.next()
+    header = [i.lower() for i in header]
     header_idx_dict = {}
     for i, h in enumerate(header):
         header_idx_dict[h] = i
@@ -77,8 +82,7 @@ def attach_query_result_by_header(input_location, output_location):
 
     writer.writerow(new_header)
 
-    print 'running queries ...'
-    n = 0
+    print 'Running queries to attach new information ...'
     for row in tqdm(reader):
         new_row = copy(row)
         for h in contained_header:
@@ -93,6 +97,8 @@ def attach_query_result_by_header(input_location, output_location):
     input_file.close()
     output_file.close()
 
+    return output_path
+
 
 def __build_input_args(row, input_headers, header_idx_dict):
     output = {}
@@ -101,7 +107,8 @@ def __build_input_args(row, input_headers, header_idx_dict):
     return output
 
 if __name__ == "__main__":
-    input_location = r'data/arrs.csv'
-    output_location = r'data/arrs_with_feature.csv'
+    pass
+    # input_location = r'data/arrs.csv'
+    # output_location = r'data/arrs_with_feature.csv'
 
-    attach_query_result_by_header(input_location, output_location)
+    # attach_query_result_by_header(input_location, output_location)

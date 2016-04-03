@@ -2,7 +2,7 @@
 from sqlalchemy import or_, and_, distinct, func
 
 from connector import db, session
-from supporting_func import get_performance, get_difficulty
+from supporting_func import get_performance, get_difficulty, user_id_to_student_id
 
 
 # arrs data
