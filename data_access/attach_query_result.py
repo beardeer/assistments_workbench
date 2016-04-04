@@ -81,9 +81,10 @@ def attach_query_result_by_header(input_path, output_path = None):
             cache[k] = {}
 
     writer.writerow(new_header)
+    csv_data = [row for row in reader]
 
     print 'Running queries to attach new information ...'
-    for row in tqdm(reader):
+    for row in tqdm(csv_data):
         new_row = copy(row)
         for h in contained_header:
             input_args = __build_input_args(row, h, header_idx_dict)
