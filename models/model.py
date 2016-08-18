@@ -9,7 +9,8 @@ def classification_model(model, data, predictors, label, categorical_features = 
     data_len = len(data)
     auc, r2, rmse, acc = [], [], [], []
 
-    print 'Predictors:', predictors
+    # print 'Predictors:', predictors
+    predictors = [p.strip() for p in predictors]
 
     kf = KFold(data_len, n_folds = k, shuffle = True)
     for train, test in tqdm(kf):
@@ -35,7 +36,12 @@ def classification_model(model, data, predictors, label, categorical_features = 
         rmse.append(metrics.mean_squared_error(y_test, y_pred_p)**0.5)
         acc.append(metrics.accuracy_score(y_test, y_pred_c))
 
-    print 'auc:', np.mean(auc)
-    print 'r2:', np.mean(r2)
-    print 'rmse:', np.mean(rmse)
-    print 'accuracy:', np.mean(acc)
+
+    a,b,c,d = np.mean(auc), np.mean(r2), np.mean(rmse), np.mean(acc)
+
+    # print 'auc:', a
+    # print 'r2:', b
+    # print 'rmse:', c
+    # print 'accuracy:', d
+
+    return a,b,c,d
