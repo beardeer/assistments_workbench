@@ -5,7 +5,7 @@ from tqdm import tqdm
 
 from data_converter import DataConverter
 
-class BKTConverter(DataConverter):
+class BKT_converter(DataConverter):
 
 	def convert(self):
 
@@ -66,7 +66,7 @@ class BKTConverter(DataConverter):
 if __name__ == "__main__":
 	col_mapping = {'user_id': 1, 'sequence_id' : 2, 'problem_id' : 3, 'correct': 4}
 
-	converter = BKTConverter('../data/1415_full.csv', '../data/bkt/nnn.txt', col_mapping)
+	converter = BKT_converter('../data/1415_full.csv', '../data/bkt/nnn.txt', col_mapping)
 
 	converter.convert()
 

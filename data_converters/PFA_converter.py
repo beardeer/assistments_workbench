@@ -8,7 +8,7 @@ from utility_dot_py.utility import DataCache
 from assistments_workbench.config_reader import config
 
 
-def PFAConverter(input_file_path, output_file_path, col_mapping = {}, pfa_model = 1):
+def PFA_converter(input_file_path, output_file_path, col_mapping = {}, pfa_model = 1):
 	"""Summary
 
 	Args:
@@ -110,4 +110,4 @@ if __name__ == "__main__":
 	input_data = os.path.join(config.get('localfiles', 'data_path'), 'sql_data_2.csv')
 	output_data = os.path.join(config.get('localfiles', 'data_path'), 'sql_data_2_pfa.txt')
 
-	PFAConverter(input_data, output_data, col_mapping_2, 2)
+	PFA_converter(input_data, output_data, col_mapping_2, 2)
