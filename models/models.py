@@ -1,5 +1,5 @@
 from metrics import binary_classification_metrics
-from sklearn.cross_validation import KFold
+from sklearn.cross_validation import KFold, LabelKFold, LeavePOut, LeavePLabelOut, LabelShuffleSplit
 from sklearn.preprocessing import OneHotEncoder
 import numpy as np
 from scipy import stats
@@ -17,15 +17,30 @@ def majority_model(data, label):
 
 
 
-def classification_model(model, data, predictors, label, categorical_features = None, k = 5, train_only = False):
+def classification_model(model, data, predictors, label, categorical_features = None, cv_label_name = None, k = 5, test_size = 0.1, n_iter = 100, train_only = False):
     data_len = len(data)
+    cv = None
     auc, r2, rmse, acc = [], [], [], []
 
     # print 'Predictors:', predictors
     predictors = [p.strip() for p in predictors]
 
-    kf = KFold(data_len, n_folds = k, shuffle = True)
-    for train, test in tqdm(kf):
+    if cv_label_name is not None:
+        cv_label = data[cv_label_name]
+    else:
+        cv_label = None
+
+
+    if k is not None and cv_label is not None:
+        cv = LabelKFold(cv_label, n_folds = k)
+    elif k is not None and cv_label is None:
+        cv = KFold(data_len, n_folds = k, shuffle = True)
+
+    if k is None and test_size is not None and n_iter is not None and cv_label is not None:
+        cv = LabelShuffleSplit(cv_label, n_iter = n_iter, test_size = test_size, random_state = 42)
+
+
+    for train, test in cv:
         x_train = (data[predictors].iloc[train,:])
         y_train = data[label].iloc[train]
         x_test = (data[predictors].iloc[test,:])

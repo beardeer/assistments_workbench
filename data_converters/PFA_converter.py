@@ -37,6 +37,8 @@ def PFA_converter(input_file_path, output_file_path, col_mapping = {}, pfa_model
 	problem_col = col_mapping['problem_id']
 	correct_col = col_mapping['correct']
 	difficulty_col = col_mapping.get('difficulty', -1)
+	prior_correct_col = col_mapping.get('prior_correct', -1)
+	prior_incorrect_col = col_mapping.get('prior_incorrect', -1)
 
 	user_seq_dict = {}
 	seq_list = []
@@ -81,11 +83,18 @@ def PFA_converter(input_file_path, output_file_path, col_mapping = {}, pfa_model
 
 		this_user_seq = this_user.setdefault(seq, {'correct_num' : 0, 'incorrect_num' : 0})
 
+		if prior_correct_col != -1 and prior_incorrect_col != -1:
+			prior_correct = row[prior_correct_col]
+			prior_incorrect = row[prior_incorrect_col]
+		else:
+			prior_correct = this_user_seq['correct_num']
+			prior_incorrect = this_user_seq['incorrect_num']
+
 		if pfa_model == 1:
-			correct_num_list[seq_pos] = this_user_seq['correct_num']
-			correct_num_list[seq_len + seq_pos] = this_user_seq['incorrect_num']
+			correct_num_list[seq_pos] = prior_correct
+			correct_num_list[seq_len + seq_pos] = prior_incorrect
 		elif pfa_model == 2:
-			correct_num_list = [this_user_seq['correct_num'], this_user_seq['incorrect_num']]
+			correct_num_list = [prior_correct, prior_incorrect]
 
 		output_data = [correct, seq, user, difficulty] + correct_num_list
 
@@ -103,11 +112,11 @@ def PFA_converter(input_file_path, output_file_path, col_mapping = {}, pfa_model
 	return output_file_path
 
 if __name__ == "__main__":
-	col_mapping = {'user_id': 0, 'sequence_id' : 2, 'problem_id' : 1, 'correct': 3, 'difficulty': 6}
+	col_mapping = {'user_id': 1, 'sequence_id' : 12, 'problem_id' : 0, 'correct': 19, 'difficulty': 16, 'prior_correct': 17, 'prior_incorrect': 18}
 
 	col_mapping_2 = {'user_id': 1, 'sequence_id' : 2, 'problem_id' : 3, 'correct': 4}
 
-	input_data = os.path.join(config.get('localfiles', 'data_path'), 'sql_data_2.csv')
-	output_data = os.path.join(config.get('localfiles', 'data_path'), 'sql_data_2_pfa.txt')
+	input_data = os.path.join(config.get('localfiles', 'data_path'), 'arrs_data.csv')
+	output_data = os.path.join(config.get('localfiles', 'data_path'), 'arrs_data_pfa.csv')
 
-	PFA_converter(input_data, output_data, col_mapping_2, 2)
+	PFA_converter(input_data, output_data, col_mapping, 1)
