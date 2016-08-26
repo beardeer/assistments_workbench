@@ -1,5 +1,5 @@
 from metrics import binary_classification_metrics
-from sklearn.cross_validation import KFold, LabelKFold, LeavePOut, LeavePLabelOut, LabelShuffleSplit
+from sklearn.cross_validation import KFold, LabelKFold, LabelShuffleSplit, ShuffleSplit
 from sklearn.preprocessing import OneHotEncoder
 import numpy as np
 from scipy import stats
@@ -38,6 +38,8 @@ def classification_model(model, data, predictors, label, categorical_features = 
 
     if k is None and test_size is not None and n_iter is not None and cv_label is not None:
         cv = LabelShuffleSplit(cv_label, n_iter = n_iter, test_size = test_size, random_state = 42)
+    if k is None and test_size is not None and n_iter is not None and cv_label is None:
+        cv = ShuffleSplit(data_len, n_iter = n_iter, test_size = test_size, random_state = 42)
 
 
     for train, test in cv:
